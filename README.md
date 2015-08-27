@@ -6,8 +6,5 @@ Depends on python 2, subliminal and PyGObject.
 
 If you are running a debian-like system, you might want to install dependencies with
 sudo apt-get install python-gobject
-sudo apt-get install python-subliminal
-if the latter doesn't work, try just:
-sudo apt-get install subliminal
 
-If you are NOT running a debian system, try installing the dependencies with pip.
+Do not! use the debian package system for subliminal. this application only works with ; pip install subliminal
