@@ -3,6 +3,7 @@ import os
 from threading import Thread
 from babelfish import *
 from subliminal import *
+
 from gi.repository import Gtk, GObject
 
 class SubtitleWindow(Gtk.Window):
@@ -93,11 +94,20 @@ class SubtitleWindow(Gtk.Window):
 		[self.video],
 		{ Language( self.languageCombo.get_active_text() ) },
 		providers=[self.providerCombo.get_active_text()] )
-		self.subtitle = self.subtitle[self.video][0]
+		
+		try:
+			self.subtitle = self.subtitle[self.video][0]
+		
+		except IndexError:
+			print "no subtitle found"
+			GObject.source_remove(self.timeout)
+			self.progressBar.set_fraction(0)
+			return False
+			
 		save_subtitles(self.video, [self.subtitle])
 		print "done"
 		GObject.source_remove(self.timeout)
-		self.progressBar.set_fraction(0.0)
+		self.progressBar.set_fraction(1)
 		
 	def progress_pulse(self):
 		self.progressBar.pulse()
