@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 import os
 from threading import Thread
-from babelfish import *
-from subliminal import *
+from babelfish import Language
+from subliminal import region, scan_video, download_best_subtitles, save_subtitles
 
 from gi.repository import Gtk, GObject
 
