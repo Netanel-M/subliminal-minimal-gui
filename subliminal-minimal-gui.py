@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import os
+import urllib
 from threading import Thread
 from babelfish import Language
 from subliminal import region, scan_video, download_best_subtitles, save_subtitles
@@ -12,9 +13,14 @@ class SubtitleWindow(Gtk.Window):
 		Gtk.Window.__init__(self)
 		self.connect("delete-event", Gtk.main_quit)
 		
+		self.set_resizable(False)
+		self.set_title("Download a Subtitle")
+		
 		self.region = region.configure('dogpile.cache.memory')
 		
 		grid = Gtk.Grid()
+		grid.set_column_spacing(10)
+		grid.set_row_spacing(10)
 		self.add( grid )
 		
 		self.movieEntry = Gtk.Entry()
@@ -43,12 +49,12 @@ class SubtitleWindow(Gtk.Window):
 		
 		self.progressBar = Gtk.ProgressBar()
 		
-		grid.attach(self.movieEntry, 0, 0, 1, 1)
-		grid.attach(openMovie, 1, 0, 1, 1)
-		grid.attach(self.languageCombo, 2, 0, 1, 1)
-		grid.attach(self.providerCombo, 3, 0, 1, 1)
-		grid.attach(bestMatch, 4, 0, 1, 1)
-		grid.attach(self.progressBar, 0, 1, 5, 1)
+		grid.attach(self.movieEntry, 0, 0, 2, 1)
+		grid.attach(openMovie, 2, 0, 2, 1)
+		grid.attach(self.languageCombo, 0, 2, 2, 1)
+		grid.attach(self.providerCombo, 3, 2, 1, 1)
+		grid.attach(bestMatch, 0, 4, 5, 1)
+		grid.attach(self.progressBar, 0, 3, 5, 1)
 		
 	def open_file(self, widget):
 		dialog = Gtk.FileChooserDialog (
@@ -71,10 +77,11 @@ class SubtitleWindow(Gtk.Window):
 	def dialog_filters(self, dialog):
 		filter_movie = Gtk.FileFilter()
 		filter_movie.set_name("Movie Files")
-		filter_movie.add_mime_type("video/mp4")
-		filter_movie.add_mime_type("video/x-msvideo")
-		filter_movie.add_mime_type("video/x-matroska")
-		filter_movie.add_mime_type("video/x-ms-wmv")
+		filter_movie.add_pattern("*.mkv")
+		filter_movie.add_pattern("*.avi")
+		filter_movie.add_pattern("*.wmv")
+		filter_movie.add_pattern("*.mp4")
+
 		dialog.add_filter(filter_movie)
 		
 		filter_all = Gtk.FileFilter()
@@ -113,6 +120,7 @@ class SubtitleWindow(Gtk.Window):
 		self.progressBar.pulse()
 		return True
 		
+
 if __name__ == "__main__":
 	
 	window = SubtitleWindow()
