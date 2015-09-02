@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 import os
-import urllib
 from threading import Thread
 from babelfish import Language
 from subliminal import region, scan_video, download_best_subtitles, save_subtitles
@@ -21,13 +20,15 @@ class SubtitleWindow(Gtk.Window):
 		grid = Gtk.Grid()
 		grid.set_column_spacing(10)
 		grid.set_row_spacing(10)
-		self.add( grid )
+		frame = Gtk.Frame( label="Download a Single Subtitle" )
+		frame.add( grid )
+		self.add( frame )
 		
 		self.movieEntry = Gtk.Entry()
 		openMovie = Gtk.Button( label = "Open Video" )
 		bestMatch = Gtk.Button ( label = "Download Best Match")
-		openMovie.connect("clicked", self.open_file)
-		bestMatch.connect("clicked", self.get_best_match)
+		openMovie.connect( "clicked", self.open_file )
+		bestMatch.connect( "clicked", self.get_best_match )
 		
 		self.languageCombo = Gtk.ComboBoxText.new_with_entry()
 		self.languageCombo.append_text("eng")
