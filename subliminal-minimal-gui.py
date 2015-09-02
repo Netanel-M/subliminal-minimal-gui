@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-import os
 from threading import Thread
 from babelfish import Language
 from subliminal import region, scan_video, download_best_subtitles, save_subtitles
