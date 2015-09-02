@@ -8,3 +8,4 @@ If you are running a debian-like system, you might want to install dependencies 
 sudo apt-get install python-gobject
 
 Do not! use the debian package system for subliminal. It seems the debian package currently is too old a version for this app. this application only works with subliminal from pypi ; pip install subliminal
+And maybe also ; pip install babelfish
