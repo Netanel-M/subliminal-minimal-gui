@@ -1,7 +1,7 @@
 # Subliminal-Minimal-Gui
 
-#A simple Graphical User Interface for Subliminal.
-##Made for downloading subtitles quickly from different providers in different languages.
+##A simple Graphical User Interface for Subliminal.
+Made for downloading subtitles quickly from different providers in different languages.
 Depends on python 2, subliminal, and PyGObject.
 It's built in one script so you can easily add/remove languages/providers
 ####Comes with the following languages:
