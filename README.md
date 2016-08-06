@@ -15,7 +15,7 @@ You can download multiple subtitles by simply clicking on the download button as
 - depends on Pygobject
 
 Tested on many old machines and limited virtual machines and it's very fast.
-Runs on windows and linux.
+Tested on windows and linux.
 
 
 
