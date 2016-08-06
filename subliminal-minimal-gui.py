@@ -30,18 +30,25 @@ class SubtitleWindow(Gtk.Window):
 		bestMatch.connect( "clicked", self.get_best_match )
 		
 		self.languageCombo = Gtk.ComboBoxText.new_with_entry()
+		
+		self.languageCombo.append_text("eso")
 		self.languageCombo.append_text("eng")
 		self.languageCombo.append_text("heb")
 		self.languageCombo.append_text("rus")
 		self.languageCombo.append_text("ara")
+		self.languageCombo.append_text("spa")
 		self.languageCombo.set_active(0)
 		
 		self.providerCombo = Gtk.ComboBoxText.new()
+		self.providerCombo.append_text("addic7ed")
+		self.providerCombo.append_text("legendastv")
 		self.providerCombo.append_text("opensubtitles")
 		self.providerCombo.append_text("podnapisi")
+		self.providerCombo.append_text("shooter")
+		self.providerCombo.append_text("subscenter")
 		self.providerCombo.append_text("thesubdb")
 		self.providerCombo.append_text("tvsubtitles")
-		self.providerCombo.append_text("addic7ed")
+
 		self.providerCombo.set_active(0)
 		
 		childEntry = self.languageCombo.get_child()
