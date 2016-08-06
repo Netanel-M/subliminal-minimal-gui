@@ -7,11 +7,15 @@ It's built in one script so you can easily add/remove languages/providers
 ###Comes with the following languages:
 English, Esperanto, Arabic, Hebrew, Russian, and Spanish.
 **You can easily add your own languages by changing the script.**
+You can download multiple subtitles by simply clicking on the download button as many times as you wish.
 
 ##requierments,
+depends on subliminal, pip install subliminal
+depends on gtk3+
+depends on Pygobject
 Tested on many old machines and limited virtual machines and it's very fast.
-runs in windows and linux. on most linux machines just download subliminal through pip and run my script. Windows machines need to install a pygobject & gtk3+/all-in-one installer.
-You can download multiple subtitles by simply clicking on the download button as many times as you wish.
+runs on windows and linux.
+
 
 
 ##ToDo,
