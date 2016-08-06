@@ -10,9 +10,9 @@ English, Esperanto, Arabic, Hebrew, Russian, and Spanish.
 You can download multiple subtitles by simply clicking on the download button as many times as you wish.
 
 ##Requirements,
-depends on subliminal, pip install subliminal
-depends on gtk3+
-depends on Pygobject
+- depends on subliminal, pip install subliminal.
+- depends on gtk3+
+- depends on Pygobject
 Tested on many old machines and limited virtual machines and it's very fast.
 runs on windows and linux.
 
