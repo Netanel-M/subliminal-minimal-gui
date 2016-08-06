@@ -4,7 +4,7 @@
 ##Made for downloading subtitles quickly from different providers in different languages.
 Depends on python 2, subliminal, and PyGObject.
 It's built in one script so you can easily add/remove languages/providers
-###Comes with the following languages:
+####Comes with the following languages:
 English, Esperanto, Arabic, Hebrew, Russian, and Spanish.
 **You can easily add your own languages by changing the script.**
 You can download multiple subtitles by simply clicking on the download button as many times as you wish. Each download will be in its own thread. When it does, the progress bar should indicate that by going faster.
