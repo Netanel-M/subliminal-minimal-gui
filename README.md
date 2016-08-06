@@ -7,7 +7,7 @@ It's built in one script so you can easily add/remove languages/providers
 ###Comes with the following languages:
 English, Esperanto, Arabic, Hebrew, Russian, and Spanish.
 **You can easily add your own languages by changing the script.**
-You can download multiple subtitles by simply clicking on the download button as many times as you wish.
+You can download multiple subtitles by simply clicking on the download button as many times as you wish. Each download will be in its own thread. When it does, the progress bar should indicate that by going faster.
 
 ##Requirements,
 - depends on subliminal, pip install subliminal.
@@ -15,7 +15,7 @@ You can download multiple subtitles by simply clicking on the download button as
 - depends on Pygobject
 
 Tested on many old machines and limited virtual machines and it's very fast.
-runs on windows and linux.
+Runs on windows and linux.
 
 
 
