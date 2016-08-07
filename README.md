@@ -21,8 +21,8 @@ Tested on windows and linux.
 
 ##ToDo,
 
-download subtitles for a list of movies
-choose from different subtitle options in addition to downloading a the best fit
-tab views for the different modes while still keeping the interface as simple as possible.
+- download subtitles for a list of movies
+- choose from different subtitle options in addition to downloading the best fit
+- tab views for the different modes while still keeping the interface as simple as possible.
 
 *Do not! use the debian package system for subliminal. It seems the debian package currently is too old a version for this app. this application only works with subliminal from pypi ; pip install subliminal*
