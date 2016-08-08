@@ -24,6 +24,7 @@ Tested on windows and linux.
 - download subtitles for a list of movies
 - choose from different subtitle options in addition to downloading the best fit
 - tab views for the different modes while still keeping the interface as simple as possible.
+- use ConfigParser to set and read settings from a configuration file
 - add settings tab to choose default settings & which languages/providers to use
 
 *Do not! use the debian package system for subliminal. It seems the debian package currently is too old a version for this app. this application only works with subliminal from pypi ; pip install subliminal*
