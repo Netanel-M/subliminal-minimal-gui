@@ -31,6 +31,9 @@ class SubtitleWindow(Gtk.Window):
 		provider_label = Gtk.Label("Provider")
 		self.language_combo = Gtk.ComboBoxText.new_with_entry()
 		self.progress_bar = Gtk.ProgressBar()
+		self.status_bar = Gtk.Statusbar()
+		self.context_id = self.status_bar.get_context_id("stat")
+		self.status_bar.push(self.context_id, "Ready.")
 
 		# Append languages to a combo box
 		self.language_combo.append_text("eso")
@@ -63,6 +66,7 @@ class SubtitleWindow(Gtk.Window):
 		grid.attach(self.provider_combo, 3, 3, 1, 1)
 		grid.attach(best_match, 0, 6, 5, 1)
 		grid.attach(self.progress_bar, 0, 5, 5, 1)
+		grid.attach(self.status_bar, 0, 6, 4, 4)
 		
 		# Margin config
 		frame.set_margin_left(10)
@@ -70,11 +74,12 @@ class SubtitleWindow(Gtk.Window):
 		frame.set_margin_top(10)
 		frame.set_margin_bottom(10)
 		self.language_combo.set_margin_left(10)
-		best_match.set_margin_bottom(10)
+		best_match.set_margin_bottom(25)
 		best_match.set_margin_left(10)
 		best_match.set_margin_right(10)
 		self.movie_entry.set_margin_left(10)
 		video_label.set_margin_top(10)
+		self.status_bar.set_margin_top(25)
 		
 		# Connect events
 		open_movie.connect( "clicked", self.open_file )
@@ -83,6 +88,8 @@ class SubtitleWindow(Gtk.Window):
 		
 	def open_file(self, widget):
 		# Open a file dialog and movie the chosen movie location to the movie entry
+		self.status_bar.pop(self.context_id)
+		self.status_bar.push(self.context_id, "Choosing a video file")
 		dialog = Gtk.FileChooserDialog (
 		"Please choose a movie or tv episode", 
 		self,
@@ -123,8 +130,9 @@ class SubtitleWindow(Gtk.Window):
 		x.start()
 
 	def get_best_subtitle(self):
-		# Get a subtitle for a given video file 
-		print "getting subtitles"
+		# Get a subtitle for a given video file
+		self.status_bar.pop(self.context_id)
+		self.status_bar.push(self.context_id, "Downloading Subtitle")
 		self.timeout = GObject.timeout_add( 100, self.progress_pulse )
 		self.subtitle = download_best_subtitles(
 		[self.video],
@@ -133,15 +141,17 @@ class SubtitleWindow(Gtk.Window):
 		
 		try:
 			self.subtitle = self.subtitle[self.video][0]
+			self.status_bar.pop(self.context_id)
+			self.status_bar.push(self.context_id, "Subtitle Downloaded Successfully")
 		
 		except IndexError:
-			print "no subtitle found"
+			self.status_bar.pop(self.context_id)
+			self.status_bar.push(self.context_id, "No Subtitle Found")
 			GObject.source_remove(self.timeout)
 			self.progress_bar.set_fraction(0)
 			return False
 			
 		save_subtitles(self.video, [self.subtitle])
-		print "done"
 		GObject.source_remove(self.timeout)
 		self.progress_bar.set_fraction(1)
 		
