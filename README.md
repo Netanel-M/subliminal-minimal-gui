@@ -17,14 +17,11 @@ You can download multiple subtitles by simply clicking on the download button as
 Tested on many old machines and limited virtual machines and it's very fast.
 Tested on windows and linux.
 
-
-
 ##ToDo,
-
-- download subtitles for a list of movies
-- choose from different subtitle options in addition to downloading the best fit
-- tab views for the different modes while still keeping the interface as simple as possible.
 - use ConfigParser to set and read settings from a configuration file
-- add settings tab to choose default settings & which languages/providers to use
+- download subtitles for a list of movies
+- add a tab for searching and downloading subtitles for multiple movies in a folder (add recursive feature too)
+- add a tab for choosing a subtitle from a list of availiable subtitles
+- add settings tab to choose default settings & which languages/providers to use (edit config file from within app)
 
 *Do not! use the debian package system for subliminal. It seems the debian package currently is too old a version for this app. this application only works with subliminal from pypi ; pip install subliminal*
