@@ -9,61 +9,80 @@ class SubtitleWindow(Gtk.Window):
 	def __init__(self):
 		GObject.threads_init()
 		Gtk.Window.__init__(self)
-		self.connect("delete-event", Gtk.main_quit)
-		
+		# Initial configuration
 		self.set_resizable(False)
-		self.set_title("Download a Subtitle")
-		
+		self.set_title("Subliminal Minimal GUI")
 		self.region = region.configure('dogpile.cache.memory')
 		
+		# Widget creation and initial config
+		notebook = Gtk.Notebook()
 		grid = Gtk.Grid()
+		frame = Gtk.Frame( label="Download a Single Subtitle" )
 		grid.set_column_spacing(10)
 		grid.set_row_spacing(10)
-		frame = Gtk.Frame( label="Download a Single Subtitle" )
+		self.add( notebook )
 		frame.add( grid )
-		self.add( frame )
-		
-		self.movieEntry = Gtk.Entry()
-		openMovie = Gtk.Button( label = "Open Video" )
-		bestMatch = Gtk.Button ( label = "Download Best Match")
-		openMovie.connect( "clicked", self.open_file )
-		bestMatch.connect( "clicked", self.get_best_match )
-		
-		self.languageCombo = Gtk.ComboBoxText.new_with_entry()
-		
-		self.languageCombo.append_text("eso")
-		self.languageCombo.append_text("eng")
-		self.languageCombo.append_text("heb")
-		self.languageCombo.append_text("rus")
-		self.languageCombo.append_text("ara")
-		self.languageCombo.append_text("spa")
-		self.languageCombo.set_active(0)
-		
-		self.providerCombo = Gtk.ComboBoxText.new()
-		self.providerCombo.append_text("addic7ed")
-		self.providerCombo.append_text("legendastv")
-		self.providerCombo.append_text("opensubtitles")
-		self.providerCombo.append_text("podnapisi")
-		self.providerCombo.append_text("shooter")
-		self.providerCombo.append_text("subscenter")
-		self.providerCombo.append_text("thesubdb")
-		self.providerCombo.append_text("tvsubtitles")
+		notebook.append_page( frame, Gtk.Label("Single Sub") )
+		self.movie_entry = Gtk.Entry()
+		open_movie = Gtk.Button( label = "Open Video" )
+		best_match = Gtk.Button ( label = "Download Best Match")
+		language_label = Gtk.Label("Language")
+		video_label = Gtk.Label("Video File")
+		provider_label = Gtk.Label("Provider")
+		self.language_combo = Gtk.ComboBoxText.new_with_entry()
+		self.progress_bar = Gtk.ProgressBar()
 
-		self.providerCombo.set_active(0)
+		# Append languages to a combo box
+		self.language_combo.append_text("eso")
+		self.language_combo.append_text("eng")
+		self.language_combo.append_text("heb")
+		self.language_combo.append_text("rus")
+		self.language_combo.append_text("ara")
+		self.language_combo.append_text("spa")
+		self.language_combo.set_active(0)
 		
-		childEntry = self.languageCombo.get_child()
-		childEntry.set_width_chars(3)
+		# Append providers to a combo box
+		self.provider_combo = Gtk.ComboBoxText.new()
+		self.provider_combo.append_text("addic7ed")
+		self.provider_combo.append_text("legendastv")
+		self.provider_combo.append_text("opensubtitles")
+		self.provider_combo.append_text("podnapisi")
+		self.provider_combo.append_text("shooter")
+		self.provider_combo.append_text("subscenter")
+		self.provider_combo.append_text("thesubdb")
+		self.provider_combo.append_text("tvsubtitles")
+		self.provider_combo.set_active(0)
 		
-		self.progressBar = Gtk.ProgressBar()
+		# Grid placement
+		grid.attach(video_label, 0, 0, 5, 1)
+		grid.attach(self.movie_entry, 0, 1, 2, 1)
+		grid.attach(open_movie, 2, 1, 2, 1)
+		grid.attach(language_label, 0, 2, 1, 1)
+		grid.attach(self.language_combo, 0, 3, 2, 1)
+		grid.attach(provider_label, 2, 2, 2, 1)
+		grid.attach(self.provider_combo, 3, 3, 1, 1)
+		grid.attach(best_match, 0, 6, 5, 1)
+		grid.attach(self.progress_bar, 0, 5, 5, 1)
 		
-		grid.attach(self.movieEntry, 0, 0, 2, 1)
-		grid.attach(openMovie, 2, 0, 2, 1)
-		grid.attach(self.languageCombo, 0, 2, 2, 1)
-		grid.attach(self.providerCombo, 3, 2, 1, 1)
-		grid.attach(bestMatch, 0, 4, 5, 1)
-		grid.attach(self.progressBar, 0, 3, 5, 1)
+		# Margin config
+		frame.set_margin_left(10)
+		frame.set_margin_right(10)
+		frame.set_margin_top(10)
+		frame.set_margin_bottom(10)
+		self.language_combo.set_margin_left(10)
+		best_match.set_margin_bottom(10)
+		best_match.set_margin_left(10)
+		best_match.set_margin_right(10)
+		self.movie_entry.set_margin_left(10)
+		video_label.set_margin_top(10)
+		
+		# Connect events
+		open_movie.connect( "clicked", self.open_file )
+		best_match.connect( "clicked", self.get_best_match )
+		self.connect("delete-event", Gtk.main_quit)
 		
 	def open_file(self, widget):
+		# Open a file dialog and movie the chosen movie location to the movie entry
 		dialog = Gtk.FileChooserDialog (
 		"Please choose a movie or tv episode", 
 		self,
@@ -76,12 +95,13 @@ class SubtitleWindow(Gtk.Window):
 		response = dialog.run()
 		if response == Gtk.ResponseType.OK:
 			fileLocation = dialog.get_filename()
-			self.movieEntry.set_text(fileLocation)
+			self.movie_entry.set_text(fileLocation)
 			dialog.destroy()
 		elif response == Gtk.ResponseType.CANCEL:
 			dialog.destroy()
 	
 	def dialog_filters(self, dialog):
+		# Filters for dialog box
 		filter_movie = Gtk.FileFilter()
 		filter_movie.set_name("Movie Files")
 		filter_movie.add_pattern("*.mkv")
@@ -97,17 +117,19 @@ class SubtitleWindow(Gtk.Window):
 		dialog.add_filter(filter_all)
 			
 	def get_best_match(self, widget):
-		self.video = scan_video( self.movieEntry.get_text() )
+		# Open a thread to find a subtitle through get_best_subtitle
+		self.video = scan_video( self.movie_entry.get_text() )
 		x = Thread(target=self.get_best_subtitle)
 		x.start()
 
 	def get_best_subtitle(self):
+		# Get a subtitle for a given video file 
 		print "getting subtitles"
 		self.timeout = GObject.timeout_add( 100, self.progress_pulse )
 		self.subtitle = download_best_subtitles(
 		[self.video],
-		{ Language( self.languageCombo.get_active_text() ) },
-		providers=[self.providerCombo.get_active_text()] )
+		{ Language( self.language_combo.get_active_text() ) },
+		providers=[self.provider_combo.get_active_text()] )
 		
 		try:
 			self.subtitle = self.subtitle[self.video][0]
@@ -115,16 +137,16 @@ class SubtitleWindow(Gtk.Window):
 		except IndexError:
 			print "no subtitle found"
 			GObject.source_remove(self.timeout)
-			self.progressBar.set_fraction(0)
+			self.progress_bar.set_fraction(0)
 			return False
 			
 		save_subtitles(self.video, [self.subtitle])
 		print "done"
 		GObject.source_remove(self.timeout)
-		self.progressBar.set_fraction(1)
+		self.progress_bar.set_fraction(1)
 		
 	def progress_pulse(self):
-		self.progressBar.pulse()
+		self.progress_bar.pulse()
 		return True
 		
 
