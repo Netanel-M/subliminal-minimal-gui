@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from threading import Thread
 from babelfish import Language
 from subliminal import region, scan_video, download_best_subtitles, save_subtitles
+from ConfigParser import SafeConfigParser
 
 from gi.repository import Gtk, GObject
 
@@ -13,6 +14,7 @@ class SubtitleWindow(Gtk.Window):
 		self.set_resizable(False)
 		self.set_title("Subliminal Minimal GUI")
 		self.region = region.configure('dogpile.cache.memory')
+		self.config = SafeConfigParser()
 		
 		# Widget creation and initial config
 		notebook = Gtk.Notebook()
@@ -25,36 +27,18 @@ class SubtitleWindow(Gtk.Window):
 		notebook.append_page( frame, Gtk.Label("Single Sub") )
 		self.movie_entry = Gtk.Entry()
 		open_movie = Gtk.Button( label = "Open Video" )
-		best_match = Gtk.Button ( label = "Download Best Match")
+		best_match = Gtk.Button ( label = "Download")
 		language_label = Gtk.Label("Language")
+		self.provider_combo = Gtk.ComboBoxText.new()
 		video_label = Gtk.Label("Video File")
 		provider_label = Gtk.Label("Provider")
 		self.language_combo = Gtk.ComboBoxText.new_with_entry()
 		self.progress_bar = Gtk.ProgressBar()
+		separator = Gtk.Separator()
 		self.status_bar = Gtk.Statusbar()
 		self.context_id = self.status_bar.get_context_id("stat")
 		self.status_bar.push(self.context_id, "Ready.")
 
-		# Append languages to a combo box
-		self.language_combo.append_text("eso")
-		self.language_combo.append_text("eng")
-		self.language_combo.append_text("heb")
-		self.language_combo.append_text("rus")
-		self.language_combo.append_text("ara")
-		self.language_combo.append_text("spa")
-		self.language_combo.set_active(0)
-		
-		# Append providers to a combo box
-		self.provider_combo = Gtk.ComboBoxText.new()
-		self.provider_combo.append_text("addic7ed")
-		self.provider_combo.append_text("legendastv")
-		self.provider_combo.append_text("opensubtitles")
-		self.provider_combo.append_text("podnapisi")
-		self.provider_combo.append_text("shooter")
-		self.provider_combo.append_text("subscenter")
-		self.provider_combo.append_text("thesubdb")
-		self.provider_combo.append_text("tvsubtitles")
-		self.provider_combo.set_active(0)
 		
 		# Grid placement
 		grid.attach(video_label, 0, 0, 5, 1)
@@ -66,7 +50,8 @@ class SubtitleWindow(Gtk.Window):
 		grid.attach(self.provider_combo, 3, 3, 1, 1)
 		grid.attach(best_match, 0, 6, 5, 1)
 		grid.attach(self.progress_bar, 0, 5, 5, 1)
-		grid.attach(self.status_bar, 0, 6, 4, 4)
+		grid.attach(separator, 0, 6, 5, 5)
+		grid.attach(self.status_bar, 0, 7, 4, 4)
 		
 		# Margin config
 		frame.set_margin_left(10)
@@ -74,17 +59,19 @@ class SubtitleWindow(Gtk.Window):
 		frame.set_margin_top(10)
 		frame.set_margin_bottom(10)
 		self.language_combo.set_margin_left(10)
-		best_match.set_margin_bottom(25)
+		best_match.set_margin_bottom(10)
 		best_match.set_margin_left(10)
 		best_match.set_margin_right(10)
 		self.movie_entry.set_margin_left(10)
 		video_label.set_margin_top(10)
-		self.status_bar.set_margin_top(25)
+		self.status_bar.set_margin_top(10)
 		
 		# Connect events
 		open_movie.connect( "clicked", self.open_file )
 		best_match.connect( "clicked", self.get_best_match )
 		self.connect("delete-event", Gtk.main_quit)
+		
+		self.parse_default_config()
 		
 	def open_file(self, widget):
 		# Open a file dialog and movie the chosen movie location to the movie entry
@@ -158,6 +145,21 @@ class SubtitleWindow(Gtk.Window):
 	def progress_pulse(self):
 		self.progress_bar.pulse()
 		return True
+	
+	def parse_default_config(self):
+		#self.language_combo.set_active("subscenter")
+		self.config.read("config.ini")
+		languages = self.config.get('languages', 'language_list')
+		languages = languages.split(',')
+		for language in languages:
+			self.language_combo.append_text(language)
+		self.language_combo.set_active(0)
+		providers = self.config.get('providers', 'provider_list')
+		providers = providers.split(',')
+		for provider in providers:
+			self.provider_combo.append_text(provider)
+		self.provider_combo.set_active(0)
+		
 		
 
 if __name__ == "__main__":
