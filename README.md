@@ -6,7 +6,7 @@ Depends on python 2, subliminal, and PyGObject.
 It's built in one script so you can easily add/remove languages/providers
 ####Comes with the following languages:
 English, Esperanto, Arabic, Hebrew, Russian, and Spanish.
-**You can easily add your own languages by changing the script.**
+**You can easily change your languages/providers by changing the config.ini file.**
 You can download multiple subtitles by simply clicking on the download button as many times as you wish. Each download will be in its own thread. When it does, the progress bar should indicate that by going faster.
 
 ##Requirements,
@@ -18,7 +18,7 @@ Tested on many old machines and limited virtual machines and it's very fast.
 Tested on windows and linux.
 
 ##ToDo,
-- use ConfigParser to set and read settings from a configuration file
+- ~~use ConfigParser to set and read settings from a configuration file~~
 - download subtitles for a list of movies
 - add a tab for searching and downloading subtitles for multiple movies in a folder (add recursive feature too)
 - add a tab for choosing a subtitle from a list of availiable subtitles
