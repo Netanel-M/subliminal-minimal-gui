@@ -112,7 +112,13 @@ class SubtitleWindow(Gtk.Window):
 			
 	def get_best_match(self, widget):
 		# Open a thread to find a subtitle through get_best_subtitle
-		self.video = scan_video( self.movie_entry.get_text() )
+		try:
+			self.video = scan_video( self.movie_entry.get_text() )
+		except ValueError:
+			self.status_bar.pop(self.context_id)
+			self.status_bar.push(self.context_id, "Error. Did you choose a video file?")
+			self.progress_bar.set_fraction(0)
+			return False	
 		x = Thread(target=self.get_best_subtitle)
 		x.start()
 
@@ -137,6 +143,7 @@ class SubtitleWindow(Gtk.Window):
 			GObject.source_remove(self.timeout)
 			self.progress_bar.set_fraction(0)
 			return False
+		
 			
 		save_subtitles(self.video, [self.subtitle])
 		GObject.source_remove(self.timeout)
@@ -147,7 +154,6 @@ class SubtitleWindow(Gtk.Window):
 		return True
 	
 	def parse_default_config(self):
-		#self.language_combo.set_active("subscenter")
 		self.config.read("config.ini")
 		languages = self.config.get('languages', 'language_list')
 		languages = languages.split(',')
