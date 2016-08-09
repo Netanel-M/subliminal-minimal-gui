@@ -23,5 +23,6 @@ Tested on windows and linux.
 - add a tab for searching and downloading subtitles for multiple movies in a folder (add recursive feature too)
 - add a tab for choosing a subtitle from a list of availiable subtitles
 - add settings tab to choose default settings & which languages/providers to use (edit config file from within app)
+- css theme support
 
 *Do not! use the debian package system for subliminal. It seems the debian package currently is too old a version for this app. this application only works with subliminal from pypi ; pip install subliminal*
