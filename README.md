@@ -1,21 +1,21 @@
 # Subliminal-Minimal-Gui
 
-##A simple Graphical User Interface for Subliminal.
+## A simple Graphical User Interface for Subliminal.
 Made for downloading subtitles quickly from different providers in different languages.
-Depends on python 2, subliminal, and PyGObject.
-It's built in one script so you can easily add/remove languages/providers
-####Comes with the following languages:
+Depends on python 3, subliminal, and PyGObject.
+It's built in one script and one configuration file so you can easily add/remove languages/providers
+#### Comes with the following languages:
 English, Esperanto, Arabic, Hebrew, Russian, and Spanish.
 **You can easily change your languages/providers by changing the config.ini file.**
 You can download multiple subtitles by simply clicking on the download button as many times as you wish. Each download will be in its own thread. When it does, the progress bar should indicate that by going faster.
 
-##Requirements,
+## Requirements,
 - depends on subliminal, pip install subliminal.
 - depends on gtk3+
 - depends on Pygobject
 
 Tested on many old machines and limited virtual machines and it's very fast.
-Tested on windows and linux.
+Tested on linux and windows.
 
 ##ToDo,
 - ~~use ConfigParser to set and read settings from a configuration file~~
@@ -24,5 +24,3 @@ Tested on windows and linux.
 - add a tab for choosing a subtitle from a list of availiable subtitles
 - add settings tab to choose default settings & which languages/providers to use (edit config file from within app)
 - css theme support
-
-*Do not! use the debian package system for subliminal. It seems the debian package currently is too old a version for this app. this application only works with subliminal from pypi ; pip install subliminal*
