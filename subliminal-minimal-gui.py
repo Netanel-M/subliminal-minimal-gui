@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from __future__ import unicode_literals
 from threading import Thread
 from babelfish import Language
