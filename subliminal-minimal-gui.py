@@ -2,8 +2,9 @@ from __future__ import unicode_literals
 from threading import Thread
 from babelfish import Language
 from subliminal import region, scan_video, download_best_subtitles, save_subtitles
-from ConfigParser import SafeConfigParser
-
+from configparser import SafeConfigParser
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
 
 class SubtitleWindow(Gtk.Window):
@@ -15,7 +16,7 @@ class SubtitleWindow(Gtk.Window):
 		self.set_title("Subliminal Minimal GUI")
 		self.region = region.configure('dogpile.cache.memory')
 		self.config = SafeConfigParser()
-		
+
 		# Widget creation and initial config
 		notebook = Gtk.Notebook()
 		grid = Gtk.Grid()
@@ -39,7 +40,7 @@ class SubtitleWindow(Gtk.Window):
 		self.context_id = self.status_bar.get_context_id("stat")
 		self.status_bar.push(self.context_id, "Ready.")
 
-		
+
 		# Grid placement
 		grid.attach(video_label, 0, 0, 5, 1)
 		grid.attach(self.movie_entry, 0, 1, 2, 1)
@@ -52,39 +53,40 @@ class SubtitleWindow(Gtk.Window):
 		grid.attach(self.progress_bar, 0, 5, 5, 1)
 		grid.attach(separator, 0, 6, 5, 5)
 		grid.attach(self.status_bar, 0, 7, 4, 4)
-		
+
 		# Margin config
 		frame.set_margin_left(10)
 		frame.set_margin_right(10)
 		frame.set_margin_top(10)
 		frame.set_margin_bottom(10)
 		self.language_combo.set_margin_left(10)
+		best_match.set_margin_top(5)
 		best_match.set_margin_bottom(10)
 		best_match.set_margin_left(10)
 		best_match.set_margin_right(10)
 		self.movie_entry.set_margin_left(10)
 		video_label.set_margin_top(10)
 		self.status_bar.set_margin_top(10)
-		
+
 		# Connect events
 		open_movie.connect( "clicked", self.open_file )
 		best_match.connect( "clicked", self.get_best_match )
 		self.connect("delete-event", Gtk.main_quit)
-		
+
 		self.parse_default_config()
-		
+
 	def open_file(self, widget):
 		# Open a file dialog and movie the chosen movie location to the movie entry
 		self.status_bar.pop(self.context_id)
 		self.status_bar.push(self.context_id, "Choosing a video file")
 		dialog = Gtk.FileChooserDialog (
-		"Please choose a movie or tv episode", 
+		"Please choose a movie or tv episode",
 		self,
 		Gtk.FileChooserAction.OPEN,
 		(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
 		Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
 		)
-		
+
 		self.dialog_filters(dialog)
 		response = dialog.run()
 		if response == Gtk.ResponseType.OK:
@@ -93,7 +95,7 @@ class SubtitleWindow(Gtk.Window):
 			dialog.destroy()
 		elif response == Gtk.ResponseType.CANCEL:
 			dialog.destroy()
-	
+
 	def dialog_filters(self, dialog):
 		# Filters for dialog box
 		filter_movie = Gtk.FileFilter()
@@ -104,12 +106,12 @@ class SubtitleWindow(Gtk.Window):
 		filter_movie.add_pattern("*.mp4")
 
 		dialog.add_filter(filter_movie)
-		
+
 		filter_all = Gtk.FileFilter()
 		filter_all.set_name("Other")
 		filter_all.add_pattern("*")
 		dialog.add_filter(filter_all)
-			
+
 	def get_best_match(self, widget):
 		# Open a thread to find a subtitle through get_best_subtitle
 		try:
@@ -118,7 +120,7 @@ class SubtitleWindow(Gtk.Window):
 			self.status_bar.pop(self.context_id)
 			self.status_bar.push(self.context_id, "Error. Did you choose a video file?")
 			self.progress_bar.set_fraction(0)
-			return False	
+			return False
 		x = Thread(target=self.get_best_subtitle)
 		x.start()
 
@@ -131,28 +133,28 @@ class SubtitleWindow(Gtk.Window):
 		[self.video],
 		{ Language( self.language_combo.get_active_text() ) },
 		providers=[self.provider_combo.get_active_text()] )
-		
+
 		try:
 			self.subtitle = self.subtitle[self.video][0]
 			self.status_bar.pop(self.context_id)
 			self.status_bar.push(self.context_id, "Subtitle Downloaded Successfully")
-		
+
 		except IndexError:
 			self.status_bar.pop(self.context_id)
 			self.status_bar.push(self.context_id, "No Subtitle Found")
 			GObject.source_remove(self.timeout)
 			self.progress_bar.set_fraction(0)
 			return False
-		
-			
+
+
 		save_subtitles(self.video, [self.subtitle])
 		GObject.source_remove(self.timeout)
 		self.progress_bar.set_fraction(1)
-		
+
 	def progress_pulse(self):
 		self.progress_bar.pulse()
 		return True
-	
+
 	def parse_default_config(self):
 		self.config.read("config.ini")
 		languages = self.config.get('languages', 'language_list')
@@ -165,11 +167,11 @@ class SubtitleWindow(Gtk.Window):
 		for provider in providers:
 			self.provider_combo.append_text(provider)
 		self.provider_combo.set_active(0)
-		
-		
+
+
 
 if __name__ == "__main__":
-	
+
 	window = SubtitleWindow()
 	window.show_all()
 	Gtk.main()
