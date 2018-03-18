@@ -8,25 +8,13 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
 
-class SubtitleWindow(Gtk.Window):
+class SingleSubTab(Gtk.Frame):
 	def __init__(self):
-		GObject.threads_init()
-		Gtk.Window.__init__(self)
-		# Initial configuration
-		self.set_resizable(False)
-		self.set_title("Subliminal Minimal GUI")
-		self.region = region.configure('dogpile.cache.memory')
-		self.config = SafeConfigParser()
-
-		# Widget creation and initial config
-		notebook = Gtk.Notebook()
+		Gtk.Frame.__init__(self)
 		grid = Gtk.Grid()
-		frame = Gtk.Frame( label="Download a Single Subtitle" )
 		grid.set_column_spacing(10)
 		grid.set_row_spacing(10)
-		self.add( notebook )
-		frame.add( grid )
-		notebook.append_page( frame, Gtk.Label("Single Sub") )
+		self.add( grid )
 		self.movie_entry = Gtk.Entry()
 		open_movie = Gtk.Button( label = "Open Video" )
 		best_match = Gtk.Button ( label = "Download")
@@ -40,7 +28,6 @@ class SubtitleWindow(Gtk.Window):
 		self.status_bar = Gtk.Statusbar()
 		self.context_id = self.status_bar.get_context_id("stat")
 		self.status_bar.push(self.context_id, "Ready.")
-
 
 		# Grid placement
 		grid.attach(video_label, 0, 0, 5, 1)
@@ -56,10 +43,10 @@ class SubtitleWindow(Gtk.Window):
 		grid.attach(self.status_bar, 0, 7, 4, 4)
 
 		# Margin config
-		frame.set_margin_left(10)
-		frame.set_margin_right(10)
-		frame.set_margin_top(10)
-		frame.set_margin_bottom(10)
+		self.set_margin_left(10)
+		self.set_margin_right(10)
+		self.set_margin_top(10)
+		self.set_margin_bottom(10)
 		self.language_combo.set_margin_left(10)
 		best_match.set_margin_top(5)
 		best_match.set_margin_bottom(10)
@@ -72,9 +59,7 @@ class SubtitleWindow(Gtk.Window):
 		# Connect events
 		open_movie.connect( "clicked", self.open_file )
 		best_match.connect( "clicked", self.get_best_match )
-		self.connect("delete-event", Gtk.main_quit)
 
-		self.parse_default_config()
 
 	def open_file(self, widget):
 		# Open a file dialog and movie the chosen movie location to the movie entry
@@ -82,7 +67,7 @@ class SubtitleWindow(Gtk.Window):
 		self.status_bar.push(self.context_id, "Choosing a video file")
 		dialog = Gtk.FileChooserDialog (
 		"Please choose a movie or tv episode",
-		self,
+		None,
 		Gtk.FileChooserAction.OPEN,
 		(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
 		Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
@@ -125,6 +110,7 @@ class SubtitleWindow(Gtk.Window):
 		x = Thread(target=self.get_best_subtitle)
 		x.start()
 
+
 	def get_best_subtitle(self):
 		# Get a subtitle for a given video file
 		self.status_bar.pop(self.context_id)
@@ -156,23 +142,42 @@ class SubtitleWindow(Gtk.Window):
 		self.progress_bar.pulse()
 		return True
 
+class SubtitleWindow(Gtk.Window):
+	def __init__(self):
+		GObject.threads_init()
+		Gtk.Window.__init__(self)
+		# Initial configuration
+		self.set_resizable(False)
+		self.set_title("Subliminal Minimal GUI")
+		self.region = region.configure('dogpile.cache.memory')
+		self.config = SafeConfigParser()
+
+		# Widget creation and initial config
+		notebook = Gtk.Notebook()
+
+		self.single_sub_tab = SingleSubTab()
+
+		self.add( notebook )
+
+		notebook.append_page( self.single_sub_tab, Gtk.Label("Single Sub") )
+
+		self.connect("delete-event", Gtk.main_quit)
+		self.parse_default_config()
+
 	def parse_default_config(self):
 		self.config.read("config.ini")
 		languages = self.config.get('languages', 'language_list')
 		languages = languages.split(',')
 		for language in languages:
-			self.language_combo.append_text(language)
-		self.language_combo.set_active(0)
+			self.single_sub_tab.language_combo.append_text(language)
+		self.single_sub_tab.language_combo.set_active(0)
 		providers = self.config.get('providers', 'provider_list')
 		providers = providers.split(',')
 		for provider in providers:
-			self.provider_combo.append_text(provider)
-		self.provider_combo.set_active(0)
-
-
+			self.single_sub_tab.provider_combo.append_text(provider)
+		self.single_sub_tab.provider_combo.set_active(0)
 
 if __name__ == "__main__":
-
 	window = SubtitleWindow()
 	window.show_all()
 	Gtk.main()
